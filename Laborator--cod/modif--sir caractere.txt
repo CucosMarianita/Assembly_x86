@@ -1,0 +1,48 @@
+// modificare sir de caractere
+// modific codul ascii al fiecarei litere
+// adaugand un +1
+// ma astept la modificarea
+// Sir -> Tjs
+// S i r NULL
+.data
+str: .asciz "Sir"
+.text
+
+.global main
+
+main:
+movl $str, %edi
+movl $0, %ecx
+et_for:
+movb (%edi, %ecx, 1), %bl
+cmp $0, %bl
+je et_exit
+addb $1, %bl
+movb %bl, (%edi, %ecx, 1)
+incl %ecx
+jmp et_for
+
+et_exit:
+movl $4, %eax
+movl $1, %ebx
+movl $str, %ecx
+movl $4, %edx
+int $0x80
+
+ movl $1, %eax
+movl $0, %ebx
+int $0x80
+
+// ecx = 0
+// ebx = str[ecx]
+// while (ebx != 0)
+// {
+// ebx++
+// str[ecx] = ebx
+// ebx = str[++ecx]
+// }
+// (b, c, d)
+// unde b <- adresa de inceput a sirurlui de caractere
+// c <- counterul curent
+// d <- dim tipului de date, in cazul nostru 1
+// EBX <- BX + BH + BL

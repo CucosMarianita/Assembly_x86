@@ -1,0 +1,52 @@
+// sa se scrie o procedura sum_rec
+// care primeste un argument de tip long, x
+// si care calculeaza suma x + (x - 1) + ... + 0 in reg. %eax
+// utilizand apeluri recursive
+// sum_rec(4) = 4 + 3 + 2 + 1 + 0 = 10
+
+// pentru o procedura recursiva am nevoie de:
+// - un caz de oprire, cazul 0
+// - un pas de recursie, sum_rec(x - 1)
+
+.data
+	x: .long 5
+	formatPrintf: .asciz "Suma este %d\n"
+.text
+
+.global main
+
+sum_rec:
+	pushl %ebp
+	movl %esp, %ebp
+					// %esp:%ebp:(%ebp v)(<adr de in>)(x)
+	movl 8(%ebp), %ecx
+	cmp $0, %ecx
+	je sum_rec_exit
+	addl %ecx, %eax
+					// sum_rec(%ecx - 1)
+	sub $1, %ecx
+	pushl %ecx
+	call sum_rec
+	popl %ecx
+
+sum_rec_exit:
+	popl %ebp
+	ret
+
+main:
+	xorl %eax, %eax
+					// %eax = sum_rec(x)
+	pushl x
+	call sum_rec
+	popl %ebx
+					// printf("Suma este %d\n", %eax)
+	pushl %eax
+	pushl $formatPrintf
+	call printf
+	popl %ebx
+	popl %ebx
+
+et_exit:
+	movl $1, %eax
+	xorl %ebx, %ebx
+	int $0x80

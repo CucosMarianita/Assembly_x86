@@ -1,0 +1,30 @@
+// array
+.data
+v: .long 10, 20, 30, 40, 50
+n: .long 5
+.text
+
+.global main
+
+main:
+movl $v, %edi # salvez adresa lui v in destination index
+movl $0, %ecx
+et_for:
+cmp n, %ecx
+je et_exit
+
+ // instructiuni
+movl (%edi, %ecx, 4), %ebx
+
+ incl %ecx
+jmp et_for
+
+et_exit:
+movl $1, %eax
+movl $0, %ebx
+int $0x80
+// for (int i = 0; i < n; i++) { accesez v[i]; }
+// for (ecx = 0; ecx < n; ecx++)
+// {
+// ebx = v[ecx]
+// }

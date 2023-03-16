@@ -1,0 +1,44 @@
+// instructiunea loop
+
+.data 			# unde declar datele de care am nevoie
+n: .long 5 		# long n = 5;
+str: .asciz "Sir\n" 	# char* str = "Sir\n"
+.text 			# anunt inceputul zonei de instructiuni
+
+.global main 		# entry-point-ul in program
+
+main: 			# de unde incepe executarea int main()
+
+ movl n, %ecx 		# %ecx <- n
+			# lucrez cu instr. loop
+			# inseamna ca %ecx initial retine
+			# de cate ori vreau sa execut
+			# structura repetitiva
+
+et_loop:
+			# utilizez stiva programului
+			# pentru a putea restaura
+			# valoarea din %ecx
+pushl %ecx 		# pun %ecx pe stiva
+			# pentru a avea garantia ca
+			# valoarea "corecta" a lui %ecx
+			# este salvata undeva
+			# apelul sistem WRITE
+movl $4, %eax 		# codul sistem 4 codifica WRITE
+movl $1, %ebx 		# codul 1 codifica std. output
+movl $str, %ecx 	# %ecx retine CE vreau sa scriu
+movl $5, %edx 		# %edx retine CAT vreau sa scriu
+int $0x80 		# apelez intreruperea de sistem
+popl %ecx 		# descarc din vf. stivei
+			# valoarea "corecta" a lui %ecx
+			# pentru a putea fi utilizata
+			# de instr. loop
+
+ loop et_loop 		# --%ecx (decrementeaza %ecx)
+			# daca %ecx != 0 sare la et_loop
+			# altfel continua cu et_exit
+
+et_exit:
+movl $1, %eax 		# 1 este codul sistem pt EXIT
+movl $0, %ebx 		# 0 este codul de return
+int $0x80		# apelez intreruperea de sistem

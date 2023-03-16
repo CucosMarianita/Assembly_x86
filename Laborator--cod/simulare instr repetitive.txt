@@ -1,0 +1,26 @@
+// simularea instructiunii repetitive
+// suma elementelor de la 0 la n-1
+.data
+	n: .long 5
+	sum: .space 4
+.text
+
+.global main
+
+main:
+	movl $0, %eax 		# suma
+	movl $0, %ecx 		# pe post de "i"
+et_loop:
+	cmp %ecx, n
+	je et_exit
+	addl %ecx, %eax 	# %eax += %ecx
+	incl %ecx
+	jmp et_loop
+
+et_exit:
+	movl %eax, sum
+
+ 	movl $1, %eax
+	movl $0, %ebx
+	int $0x80
+// for (ecx = 0; ecx < n; ecx++) { eax += ecx; }

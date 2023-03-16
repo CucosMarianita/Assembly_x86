@@ -1,0 +1,44 @@
+// suma a doua numere prin procedura
+
+.data
+x: .long 5
+y: .long 13
+.text
+
+.global main
+
+sum:
+			// %esp:(<adr intoarcere>)(x)(y)
+pushl %ebp
+			// %esp:(%ebp v)(<adr intoarcere>)(x)(y)
+movl %esp, %ebp
+			// %esp:%ebp:(%ebp v)(<adr intoarcere>)(x)(y)
+pushl %ebx
+			// %esp:(%ebx v)%ebp:(%ebp v)(<adr in>)(x)(y)
+movl 8(%ebp), %eax 	# x-ul
+movl 12(%ebp), %ebx 	# y-ul
+addl %ebx, %eax 	# %eax := x + y
+popl %ebx
+			// %esp:%ebp:(%ebp v)(<adr in>)(x)(y)
+popl %ebp
+			// %esp:(<adr in>)(x)(y)
+ret
+			// %esp:(x)(y)
+
+main:
+			// %eax = sum(x, y)
+pushl y
+			// %esp:(y)
+pushl x
+			// %esp:(x)(y)
+call sum
+			// %esp:(x)(y)
+popl %ebx
+			// %esp:(y)
+popl %ebx
+			// %esp:()
+
+et_exit:
+movl $1, %eax
+xorl %ebx, %ebx
+int $0x80

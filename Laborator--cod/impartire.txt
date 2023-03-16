@@ -1,0 +1,21 @@
+// impartirea a doua numere
+.data
+x: .long 30
+y: .long 4
+cat: .space 4
+rest: .space 4
+.text
+
+.global main
+
+main:
+movl $0, %edx # golim INTOTDEAUNA edx-ul
+movl x, %eax # %eax = x
+divl y # (edx, eax) = eax / y = x / y
+movl %edx, rest
+movl %eax, cat
+
+et_exit:
+movl $1, %eax
+movl $0, %ebx
+int $0x80

@@ -1,0 +1,6 @@
+			# apelul sistem WRITE
+movl $4, %eax 		# codul sistem 4 codifica WRITE
+movl $1, %ebx 		# codul 1 codifica std. output
+movl $str, %ecx 	# %ecx retine CE vreau sa scriu
+movl $5, %edx 		# %edx retine CAT vreau sa scriu
+int $0x80 		# apelez intreruperea de sistem

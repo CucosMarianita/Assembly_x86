@@ -1,0 +1,65 @@
+// procedura pentru paritate
+
+.data
+x: .space 4
+strPar: .asciz "%d este par\n"
+strImpar: .asciz "%d este impar\n"
+formatScanf: .asciz "%d"
+
+.text
+
+.global main
+
+este_par:
+			// %esp:(<adr in>)(x)
+pushl %ebp
+movl %esp, %ebp
+			// %esp:%ebp(%ebp v)(<adr in>)(x)
+pushl %ebx
+			// %esp:(%ebx v)%ebp:(%ebp v)(<adr in>)(x)
+movl 8(%ebp), %eax 	# %eax este x-ul
+movl $2, %ebx
+xorl %edx, %edx 	# fac o impartire
+divl %ebx 		# (%edx, %eax) := %eax / %ebx
+			# in %edx am restul
+movl %edx, %eax
+popl %ebx
+			// %esp:%ebp:(%ebp v)(<adr in>)(x)
+popl %ebp
+			// %esp:(<adr in>)(x)
+ret
+			// %esp:(x)
+
+main:
+			// scanf("%d", &x);
+pushl $x
+pushl $formatScanf
+call scanf
+popl %ebx
+popl %ebx
+			// %eax = este_par(x)
+pushl x
+call este_par
+popl %ebx
+cmp $1, %eax
+je impar
+			// print("%d este par", x);
+pushl x
+pushl $strPar
+call printf
+popl %ebx
+popl %ebx
+jmp et_exit
+
+impar:
+			// print("%d este impar", x);
+pushl x
+pushl $strImpar
+call printf
+popl %ebx
+popl %ebx
+
+et_exit:
+movl $1, %eax
+xorl %ebx, %ebx
+int $0x80
